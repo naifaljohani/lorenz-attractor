@@ -1,0 +1,15 @@
+# ModelSim build and session files
+work/
+*.wlf
+transcript
+*.cr.mti
+*.mpf
+
+# Quartus
+db/
+incremental_db/
+output_files/
+
+# Python
+__pycache__/
+docs/sim.npy
