@@ -52,15 +52,23 @@ z <= z + y·(x >>> 7) − β·(z >>> 7)          // z + dt·(xy − βz)
 So the design needs 4 multipliers, 4 subtractors and 3 adders, and finishes one full integration step every clock.
 
 ```mermaid
-flowchart LR
-    X[(x reg)] --> SUB1["y − x"] --> SH1[">>> 7"] --> M1["× σ"] --> AX(("+")) --> X
-    Y[(y reg)] --> SUB1
-    Z[(z reg)] --> SUB2["ρ − z"] --> M2["× (x >>> 7)"] --> SUB3["− (y >>> 7)"] --> AY(("+")) --> Y
-    X --> M2
-    Y --> SUB3
-    Y --> M3["y × (x >>> 7)"] --> SUB4["−"] --> AZ(("+")) --> Z
-    X --> M3
-    Z --> M4["β × (z >>> 7)"] --> SUB4
+flowchart TB
+    subgraph SX["x update"]
+        direction LR
+        A1["y − x"] --> A2[">>> 7"] --> A3["× σ"] --> A4(("+")) --> XR[("x")]
+        XR -. feedback .-> A4
+    end
+    subgraph SY["y update"]
+        direction LR
+        B1["ρ − z"] --> B2["× (x >>> 7)"] --> B3["− (y >>> 7)"] --> B4(("+")) --> YR[("y")]
+        YR -. feedback .-> B4
+    end
+    subgraph SZ["z update"]
+        direction LR
+        C1["y × (x >>> 7)"] --> C3["−"] --> C4(("+")) --> ZR[("z")]
+        C2["β × (z >>> 7)"] --> C3
+        ZR -. feedback .-> C4
+    end
 ```
 
 ### Arithmetic modules
